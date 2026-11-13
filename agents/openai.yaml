@@ -1,4 +1,4 @@
 interface:
-  display_name: "EPIC JAM · 3D 美术风格"
-  short_description: "统一本次项目的低多边形切面造型、配色与材质，生成 AI 建模提示词"
-  default_prompt: "使用 $epic-jam-3d-style，为本次项目制作一件旧物店道具的 AI 建模提示词和风格复核要点。"
+  display_name: "EPIC JAM · 低模到 UE 工作流"
+  short_description: "串联项目低模风格转换、建模整理、分件三视图与 UE 资产导入检查"
+  default_prompt: "使用 $epic-jam-3d-style，将这件素材转换为项目低多边形风格，完成模型、三视图和 UE 导入包，并说明实际验证到哪一步。"

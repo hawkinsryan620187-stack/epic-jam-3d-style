@@ -1,0 +1,11 @@
+{
+  "asset_name": "WorkshopProp",
+  "input": "./source.glb",
+  "output": "./output_v01",
+  "style_mode": "project",
+  "triangle_budget": 5000,
+  "decimate_ratio": 1.0,
+  "collision": "none",
+  "material_map": {},
+  "render": true
+}

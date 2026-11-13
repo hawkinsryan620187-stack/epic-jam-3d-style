@@ -1,57 +1,87 @@
-# EPIC JAM · 3D 美术风格 Skill
+# EPIC JAM · 低模风格到 UE 资产工作流
 
-供本项目制作组使用的 3D 美术风格约束与 AI 建模提示词。以低多边形大切面、厚实形体、克制细节和低饱和固有色为基调；场景光照由下游在 UE 中调整。
+将文字、参考图或已有模型，沿项目统一的低多边形风格，推进到实际模型、三视图和 UE 导入包。
 
-![风格参考](assets/style-reference.png)
+**[下载最新 Skill ZIP](https://github.com/hawkinsryan620187-stack/epic-jam-3d-style/releases/latest/download/epic-jam-3d-style.zip)** · [完整工作流](references/workflow.md) · [运行说明](references/running-pipeline.md) · [版本](https://github.com/hawkinsryan620187-stack/epic-jam-3d-style/releases)
 
-**[下载可安装 ZIP](https://github.com/hawkinsryan620187-stack/epic-jam-3d-style/releases/latest/download/epic-jam-3d-style.zip)** · [版本与下载](https://github.com/hawkinsryan620187-stack/epic-jam-3d-style/releases) · [Skill 主文件](SKILL.md)
+![项目风格参考](assets/style-reference.png)
 
-## 安装到 Codex
+## 一句话调用
 
-下载并解压 ZIP，将里面完整的 `epic-jam-3d-style` 文件夹放入：
+```text
+使用 $epic-jam-3d-style，把这张参考图中的台灯转换为项目低多边形风格，
+制作真实模型、正侧背三视图和 UE 导入包。灯臂需要独立旋转。
+```
+
+```text
+使用 $epic-jam-3d-style，处理这个已有模型：
+按项目色板统一材质，面数控制在 3000 三角面以内，保留主要轮廓，
+导出 UE 用 FBX 和预览 GLB，并报告实际验证结果。
+```
+
+## 流程
+
+```mermaid
+flowchart LR
+  A[文字 / 参考图] --> B[统一造型与配色]
+  B --> C[实际建模工具]
+  D[已有模型] --> E[模型检查与风格调整]
+  C --> E
+  E --> F[分件 / 材质 / UV / 三视图]
+  F --> G[逐件 FBX / GLB / 回读检查]
+  G --> H[UE 导入 / 材质接线 / 尺寸检查]
+  H --> I[视觉与玩法验收]
+```
+
+## v0.2 能做什么
+
+- 沿用项目风格基线、原始参考图、11 类配方和 4 条完整提示词。
+- 用一条命令处理已有静态模型：项目色板映射、可选减面、分件、UV、实际网格三视图和导出。
+- 按实际层级保留活动部件枢轴，逐件导出 FBX，避免把所有活动部件焊成一体。
+- 可选粗略包围盒碰撞；检查封闭几何、面数预算，并重新导入 FBX/GLB 核对尺寸、面数与材质槽。
+- 随模型生成 UE Python 导入脚本，按参数重建材质并检查厘米尺寸。
+
+**实测范围**：本地脚本用电脑与台灯验证，详见 [验证记录](references/validation.md)。UE 导入脚本尚未在目标 UE 项目运行；图生 3D 需要已接通的建模服务，简单道具也可由助手用 Blender 配方制作。
+
+“转换风格”包括造型判断与调整。整理脚本的平面着色、色板映射与减面不能替代语义造型设计。当前自动整理器适用于常量 PBR 材质的封闭静态组件；复杂纹理、透明材质、开放网格和角色绑定走专门分支。
+
+## 安装
+
+下载 ZIP，将完整 `epic-jam-3d-style` 文件夹放入：
 
 - macOS / Linux：`~/.codex/skills/`
 - Windows：`%USERPROFILE%\.codex\skills\`
-- 若设置了 `CODEX_HOME`：放入该目录下的 `skills/`。
+- 设置了 `CODEX_HOME` 时：该目录下的 `skills/`。
 
-保留 `assets`、`references` 和 `agents` 子目录。重新打开聊天，确认技能已被发现；也可以直接指定 `SKILL.md` 文件让助手读取。
+重新打开聊天后使用 `$epic-jam-3d-style`。也可直接让助手读取 `SKILL.md`。已安装旧版时保留自己的修改，再用新版完整文件夹更新。
 
-使用 Git 也可以安装（目标目录不存在时）：
+首次 Git 安装：
 
 ```bash
 git clone https://github.com/hawkinsryan620187-stack/epic-jam-3d-style.git ~/.codex/skills/epic-jam-3d-style
 ```
 
-## 使用示例
+## 本地一条命令
 
-```text
-使用 $epic-jam-3d-style，为一台复古电脑生成 AI 建模提示词。
-包括厚实切角机身、独立键盘、低饱和配色，给出分件和材质要求。
+安装 Blender，填写 [任务模板](templates/static-prop.json) 后运行：
+
+```bash
+python scripts/run_pipeline.py --job /path/to/job.json --blender /path/to/blender
 ```
 
-```text
-使用 $epic-jam-3d-style，制作一盏可调节桌灯的模型与正、侧、背三视图。
-采用木底座、靛灰灯臂、黄铜转轴，保持几何切面清楚、装饰克制。
-```
+相对路径以任务 JSON 所在目录为基准。活动道具参考 [分件模板](templates/articulated-prop.json)。输出新版本文件夹，包含模型、四个视角、清单和 `ue_import.py`；UE 端用法见 [引擎交接](references/ue-handoff.md)。
 
-```text
-使用 $epic-jam-3d-style，检查我提供的模型是否符合风格，
-具体指出剪影、分面、细节密度、材质和配色需要修改的部位。
-```
+## 文档
 
-普通建模平台可直接复制 [提示词配方](references/prompt-recipes.md) 中的完整示例。支持参考图的工具可附 `assets/style-reference.png`，说明它用于风格参考；单件造型另外提供。
-
-## 内容
-
-| 文件 | 用途 |
+| 内容 | 链接 |
 |---|---|
-| [SKILL.md](SKILL.md) | 技能入口、共用约束和执行方式 |
-| [风格基线](references/style-baseline.md) | 各类造型规则、工作色板及材质约定 |
-| [提示词配方](references/prompt-recipes.md) | 11 类配方、4 条完整示例和输出模式 |
-| [交付与复核](references/asset-handoff.md) | 分件、UV、实际模型检查与交付记录 |
-| [参考图](assets/style-reference.png) | 1672×941 原始风格参考，未插值 |
-| [界面配置](agents/openai.yaml) | Codex 技能名称与默认调用示例 |
+| 技能入口 | [SKILL.md](SKILL.md) |
+| 造型、色板与材质 | [风格基线](references/style-baseline.md) |
+| 生成提示词 | [配方](references/prompt-recipes.md) |
+| 流程与工具选择 | [完整工作流](references/workflow.md) |
+| 执行参数和能力范围 | [运行说明](references/running-pipeline.md) |
+| UE 导入与实测要求 | [UE 交接](references/ue-handoff.md) |
+| 研究的公开 skill 与管线 | [来源与取舍](references/research-sources.md) |
+| 本版本实际验证 | [验证记录](references/validation.md) |
 
-本 Skill 提供风格约束与复核方法。实际生成图片或 3D 文件，需要使用环境中可用的对应工具；它本身不包含建模引擎、模型权重或 API 密钥。
-
-当前版本为首版工作基线 v0.1，色值与比例属于工作建议，后续以制作组确认的样板为准。
+本包不包含第三方模型权重、Blender 安装包或服务密钥。首次风格基线中的色值与比例仍为工作建议，以制作组确认的样板优先。

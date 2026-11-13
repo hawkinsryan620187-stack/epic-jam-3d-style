@@ -1,0 +1,23 @@
+{
+  "asset_name": "DeskLamp",
+  "input": "./source.glb",
+  "output": "./output_v01",
+  "style_mode": "project",
+  "triangle_budget": 1500,
+  "decimate_ratio": 1.0,
+  "collision": "none",
+  "material_map": {
+    "Walnut": "wood",
+    "SlateIndigo": "indigo",
+    "AgedBrass": "brass",
+    "SoftIvory": "ivory",
+    "DarkRubber": "dark"
+  },
+  "parts": [
+    {"name": "Base", "root": "Lamp_ROOT"},
+    {"name": "LowerArm", "root": "Pivot_LowerArm"},
+    {"name": "UpperArm", "root": "Pivot_UpperArm"},
+    {"name": "Shade", "root": "Pivot_Shade"}
+  ],
+  "render": true
+}
